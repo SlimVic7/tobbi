@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For TOBBI</title>
+    <style>
+        :root {
+            --burgundy: #4a0404;
+            --deep-black: #0d0d0d;
+            --slime-green: #32cd32;
+            --peach: #ffcb9a;
+            --soft-white: #fdfaf6;
+        }
+
+        body {
+            background: radial-gradient(circle at center, var(--burgundy) 0%, var(--deep-black) 100%);
+            color: var(--soft-white);
+            font-family: 'Georgia', serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .card {
+            background: rgba(13, 13, 13, 0.85);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 30px;
+            border: 2px solid var(--slime-green);
+            text-align: center;
+            box-shadow: 0 0 40px rgba(50, 205, 50, 0.15);
+            max-width: 420px;
+            width: 90%;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.6rem;
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+            color: var(--soft-white);
+        }
+
+        .subtitle {
+            color: var(--slime-green);
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* This box keeps the NO button trapped */
+        .buttons-area {
+            position: relative;
+            height: 200px;
+            width: 100%;
+            margin-top: 20px;
+            border-radius: 15px;
+            /* Remove border below if you want the box invisible */
+            border: 1px dashed rgba(255, 203, 154, 0.1); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        #yesBtn {
+            background-color: var(--slime-green);
+            color: var(--deep-black);
+            z-index: 20;
+            box-shadow: 0 5px 15px rgba(50, 205, 50, 0.3);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #noBtn {
+            background-color: transparent;
+            color: var(--peach);
+            border: 1px solid var(--peach);
+            z-index: 10;
+            position: absolute;
+            white-space: nowrap;
+            /* Initial position offset from Yes */
+            left: 50%;
+            top: 75%;
+            transform: translateX(-50%);
+        }
+
+        .hidden { display: none; }
+
+        #successMessage img {
+            width: 100%;
+            border-radius: 15px;
+            margin-top: 20px;
+            border: 2px solid var(--slime-green);
+        }
+
+        .footer {
+            margin-top: 25px;
+            font-size: 0.8rem;
+            color: var(--peach);
+            letter-spacing: 4px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card" id="mainContainer">
+        <h1>TOBBI</h1>
+        <span class="subtitle">Will you be my Valentine?</span>
+        
+        <div class="buttons-area" id="box">
+            <button id="yesBtn">Yes</button>
+            <button id="noBtn">No</button>
+        </div>
+
+        <div class="footer">LOVE, MOBBI</div>
+    </div>
+
+    <div class="card hidden" id="successMessage">
+        <h1 style="color: var(--slime-green);">YAY! ❤️</h1>
+        <p>I knew you couldn't resist.</p>
+        <img src="val.jpg" alt="Celebration">
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const box = document.getElementById('box');
+        const mainContainer = document.getElementById('mainContainer');
+        const successMessage = document.getElementById('successMessage');
+
+        const phrases = [
+            "Are you sure?", 
+            "Think again!", 
+            "Really?", 
+            "Last chance!", 
+            "You really want to decline? 🥺", 
+            "MOBBI is sad now"
+        ];
+        let phraseIndex = 0;
+
+        noBtn.addEventListener('mouseover', () => {
+            // Calculate boundaries within the buttons-area
+            const maxX = box.clientWidth - noBtn.offsetWidth;
+            const maxY = box.clientHeight - noBtn.offsetHeight;
+
+            // Generate random positions
+            const newX = Math.floor(Math.random() * maxX);
+            const newY = Math.floor(Math.random() * maxY);
+
+            // Apply new position and change text
+            noBtn.style.left = newX + 'px';
+            noBtn.style.top = newY + 'px';
+            noBtn.style.transform = 'none'; // Remove the initial centering
+            
+            noBtn.innerText = phrases[phraseIndex];
+            phraseIndex = (phraseIndex + 1) % phrases.length;
+            
+            // Subtle: Make the Yes button slightly more enticing
+            const currentScale = yesBtn.style.transform === '' ? 1 : parseFloat(yesBtn.style.transform.replace('translate(-50%, -50%) scale(', '').replace(')', ''));
+            // If you want it to grow, uncomment below:
+            // yesBtn.style.transform = `translate(-50%, -50%) scale(${currentScale + 0.05})`;
+        });
+
+        yesBtn.addEventListener('click', () => {
+            mainContainer.classList.add('hidden');
+            successMessage.classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
